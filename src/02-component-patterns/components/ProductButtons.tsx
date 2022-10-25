@@ -3,10 +3,19 @@ import { ProductButtonsCounter } from "./product-buttons/ProductButtonsCounter";
 import { ProductButtonsAdd } from './product-buttons/ProductButtonsAdd';
 import styles from "../styles/styles.module.css";
 
-export const ProductButtons = () => {
+
+export interface PropsButtons {
+
+    className?: string,
+    style?: React.CSSProperties,
+
+};
+
+
+export const ProductButtons = ( { className, style }: PropsButtons ) => {
 
     return (
-        <div className={ styles.buttonsContainer }>
+        <div style={ style } className={ `${ styles.buttonsContainer } ${ className }` }>
 
             <ProductButtonsRest />
 

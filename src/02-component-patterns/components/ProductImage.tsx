@@ -3,7 +3,17 @@ import { ProductContext } from './ProductCard';
 import styles from "../styles/styles.module.css";
 import noImage from "../assets/no-image.jpg";
 
-export const ProductImg = ({ img  = '' }) => {
+
+export interface PropsImage {
+
+    img?: string,
+    className?: string,
+    style?: React.CSSProperties,
+
+}
+
+
+export const ProductImg = ( { img  = '', className, style }: PropsImage ) => {
 
     const { product } = useContext( ProductContext );
 
@@ -24,7 +34,7 @@ export const ProductImg = ({ img  = '' }) => {
     };
 
     return (
-        <img className={ styles.productImg } src={ imgToShow } alt="Nombre Imagen" />
+        <img style={ style } className={ `${ styles.productImg } ${ className }` } src={ imgToShow } alt="Nombre Imagen" />
     );
 
 };
