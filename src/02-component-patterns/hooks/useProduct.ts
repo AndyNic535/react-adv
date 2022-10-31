@@ -1,25 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useProductArgs } from '../interfaces/interfaces';
 
-export const useProduct = ( { onChange, product, value = 0 }: useProductArgs ) => {
+export const useProduct = ( { onChange, product, value = 0, initialValue }: useProductArgs ) => {
 
-    const [ counter, setCounter ] = useState( value );
+    const [ counter, setCounter ] = useState<number>( initialValue?.count || value );
 
-    //-------- Manejar la cantidad ( suma, o cambiar directamente el contador ) --------//
-
-    // const isControlled = useRef( !!onChange );
+    const isMounted = useRef( false );
 
     const increaseBy = ( value: number ) => {
 
-        //-------- Manejar la cantidad ( suma, o cambiar directamente el contador ) --------//
+        let newValue = Math.max( counter + value, 0 );
 
-        // if( isControlled.current ) {
+        if ( initialValue?.maxCount ) {
 
-        //     return onChange!({ count: value, product })
+            newValue = Math.min( newValue, initialValue.maxCount );
 
-        // }
-
-        const newValue = Math.max( counter + value, 0 )
+        };
 
         setCounter( newValue );
 
@@ -27,12 +23,37 @@ export const useProduct = ( { onChange, product, value = 0 }: useProductArgs ) =
 
     }; 
 
+    const reset = ( () => {
+
+        setCounter( initialValue?.count || value );
+
+    });
+
     useEffect( () => {
+
+        if ( !isMounted.current ) return;
 
         setCounter( value );
 
     }, [ value ] );
 
-    return { counter, increaseBy };
+
+    //--------------- Deberia funcionar, pero de momento estara comentada para poder continuar con el curso ---------------//
+
+    // useEffect( () => {
+
+    //     isMounted.current= true;
+
+    // }, [] );
+
+
+    return { 
+        
+        counter, 
+        increaseBy, 
+        reset,
+        isMaxCountReached: !!initialValue?.count && initialValue.maxCount === counter,
+        maxCount: initialValue?.maxCount 
+    };
 
 };
